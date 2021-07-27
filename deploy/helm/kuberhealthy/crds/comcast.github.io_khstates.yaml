@@ -59,9 +59,9 @@ spec:
                 items:
                   type: string
                 type: array
-              # LastRun:
-              #   format: date-time
-              #   type: string
+              LastRun:
+                format: date-time
+                type: string
                 # type: object
               Namespace:
                 type: string

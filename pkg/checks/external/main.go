@@ -371,6 +371,7 @@ func (ext *Checker) setUUID(uuid string) error {
 		newState.Namespace = ext.Namespace
 		ext.log("Creating khstate", newState.Name, newState.Namespace, "because it did not exist")
 		ext.log("newState:", newState)
+		newState.Spec.LastRun = metav1.Now()
 		_, err = ext.KHStateClient.KuberhealthyStates(ext.CheckNamespace()).Create(&newState)
 		if err != nil {
 			ext.log("failed to create a khstate after finding that it did not exist:", err)

@@ -943,7 +943,7 @@ func (k *Kuberhealthy) runJob(ctx context.Context, job khjobv1.KuberhealthyJob) 
 	details.CurrentUUID = jobDetails.CurrentUUID
 
 	// Fetch node information from running check pod using kh run uuid
-	selector := "kuberhealthy-run-id="+details.CurrentUUID
+	selector := "kuberhealthy-run-id=" + details.CurrentUUID
 	pod, err := k.fetchPodBySelector(selector)
 	if err != nil {
 		log.Errorln(err)
@@ -1056,7 +1056,7 @@ func (k *Kuberhealthy) runCheck(ctx context.Context, c *external.Checker) {
 		details.CurrentUUID = checkDetails.CurrentUUID
 
 		// Fetch node information from running check pod using kh run uuid
-		selector := "kuberhealthy-run-id="+details.CurrentUUID
+		selector := "kuberhealthy-run-id=" + details.CurrentUUID
 		pod, err := k.fetchPodBySelector(selector)
 		if err != nil {
 			log.Errorln(err)
@@ -1117,6 +1117,9 @@ func (k *Kuberhealthy) storeCheckState(checkName string, checkNamespace string, 
 
 	// put the status on the CRD from the check
 	err = setCheckStateResource(checkName, checkNamespace, details)
+	if err != nil {
+		log.Errorf("unable to set khstate for %s in %s namespace: %v", checkName, checkNamespace, err)
+	}
 
 	//TODO: Make this retry of updating custom resources repeatable
 	//
@@ -1142,6 +1145,9 @@ func (k *Kuberhealthy) storeCheckState(checkName string, checkNamespace string, 
 
 		// try setting the check state again
 		err = setCheckStateResource(checkName, checkNamespace, details)
+		if err != nil {
+			log.Errorf("unable to set khstate for %s in %s namespace: %v", checkName, checkNamespace, err)
+		}
 
 		// count how many times we've retried
 		tries++
