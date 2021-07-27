@@ -99,7 +99,7 @@ type Checker struct {
 	KuberhealthyReportingURL string        // the URL that the check should want to report results back to
 	ExtraAnnotations         map[string]string
 	ExtraLabels              map[string]string
-	Node					 string 			// the node the checker pod runs on
+	Node                     string             // the node the checker pod runs on
 	currentCheckUUID         string             // the UUID of the current external checker running
 	Debug                    bool               // indicates we should run in debug mode - run once and stop
 	shutdownCTXFunc          context.CancelFunc // used to cancel things in-flight when shutting down gracefully
@@ -370,6 +370,7 @@ func (ext *Checker) setUUID(uuid string) error {
 		newState := khstatev1.NewKuberhealthyState(ext.CheckName, details)
 		newState.Namespace = ext.Namespace
 		ext.log("Creating khstate", newState.Name, newState.Namespace, "because it did not exist")
+		ext.log("newState:", newState)
 		_, err = ext.KHStateClient.KuberhealthyStates(ext.CheckNamespace()).Create(&newState)
 		if err != nil {
 			ext.log("failed to create a khstate after finding that it did not exist:", err)

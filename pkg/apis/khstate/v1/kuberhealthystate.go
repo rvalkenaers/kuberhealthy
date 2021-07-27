@@ -21,6 +21,7 @@ import (
 	"context"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/watch"
@@ -108,6 +109,7 @@ func (c *kuberhealthyStates) Watch(opts metav1.ListOptions) (watch.Interface, er
 // Create takes the representation of a kuberhealthyState and creates it.  Returns the server's representation of the kuberhealthyState, and an error, if there is any.
 func (c *kuberhealthyStates) Create(kuberhealthyState *KuberhealthyState) (result KuberhealthyState, err error) {
 	result = KuberhealthyState{}
+	log.Infof("KHSTATE: %v", kuberhealthyState)
 	err = c.client.Post().
 		Namespace(c.ns).
 		Resource("khstates").

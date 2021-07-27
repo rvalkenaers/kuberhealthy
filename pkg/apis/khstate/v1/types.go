@@ -29,15 +29,15 @@ type KuberhealthyState struct {
 // WorkloadDetails contains details about a single kuberhealthy check or job's current status
 // +k8s:openapi-gen=true
 type WorkloadDetails struct {
-	OK               bool      `json:"OK"`               // true or false status of the khWorkload, whether or not it completed successfully
-	Errors           []string  `json:"Errors"`           // the list of errors reported from the khWorkload run
-	RunDuration      string    `json:"RunDuration"`      // the time it took for the khWorkload to complete
-	Namespace        string    `json:"Namespace"`        // the namespace the khWorkload was run in
-	Node 			 string    `json:"Node"`		     // the node the khWorkload ran on
+	OK          bool     `json:"OK"`          // true or false status of the khWorkload, whether or not it completed successfully
+	Errors      []string `json:"Errors"`      // the list of errors reported from the khWorkload run
+	RunDuration string   `json:"RunDuration"` // the time it took for the khWorkload to complete
+	Namespace   string   `json:"Namespace"`   // the namespace the khWorkload was run in
+	Node        string   `json:"Node"`        // the node the khWorkload ran on
 	// +optional
 	LastRun          metav1.Time `json:"LastRun"`          // the time the khWorkload was last run
-	AuthoritativePod string    `json:"AuthoritativePod"` // the main kuberhealthy pod creating and updating the khstate
-	CurrentUUID      string    `json:"uuid"`             // the UUID that is authorized to report statuses into the kuberhealthy endpoint
+	AuthoritativePod string      `json:"AuthoritativePod"` // the main kuberhealthy pod creating and updating the khstate
+	CurrentUUID      string      `json:"uuid"`             // the UUID that is authorized to report statuses into the kuberhealthy endpoint
 	khWorkload       KHWorkload
 }
 
