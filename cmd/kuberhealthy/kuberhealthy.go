@@ -1443,10 +1443,10 @@ func (k *Kuberhealthy) externalCheckReportHandler(w http.ResponseWriter, r *http
 
 	switch khWorkload {
 	case khstatev1.KHCheck:
-		checkDetails := k.stateReflector.CurrentStatus().CheckDetails
+		checkDetails := k.stateReflector.CurrentStatus([]string{podReport.Namespace + "/" + podReport.Name}).CheckDetails
 		checkRunDuration = checkDetails[podReport.Namespace+"/"+podReport.Name].RunDuration
 	case khstatev1.KHJob:
-		jobDetails := k.stateReflector.CurrentStatus().JobDetails
+		jobDetails := k.stateReflector.CurrentStatus([]string{podReport.Namespace + "/" + podReport.Name}).JobDetails
 		checkRunDuration = jobDetails[podReport.Namespace+"/"+podReport.Name].RunDuration
 	}
 
@@ -1556,7 +1556,7 @@ func (k *Kuberhealthy) getCurrentState(namespaces []string) health.State {
 		return currentState
 	}
 
-	currentState := k.stateReflector.CurrentStatus()
+	currentState := k.stateReflector.CurrentStatus([]string{})
 	currentState.CurrentMaster = currentMaster
 	return currentState
 }
@@ -1566,7 +1566,7 @@ func (k *Kuberhealthy) getCurrentState(namespaces []string) health.State {
 // Failures to fetch CRD state return an error.
 func (k *Kuberhealthy) getCurrentStatusForNamespaces(namespaces []string) health.State {
 	// if there is are requested namespaces, then filter out checks from namespaces not matching those requested
-	states := k.stateReflector.CurrentStatus()
+	states := k.stateReflector.CurrentStatus([]string{})
 	statesForNamespaces := states
 	statesForNamespaces.Errors = []string{}
 	statesForNamespaces.OK = true

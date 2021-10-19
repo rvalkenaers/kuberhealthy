@@ -53,8 +53,9 @@ func (sr *StateReflector) Start() {
 	sr.reflector.Run(sr.reflectorSigChan)
 }
 
-// CurrentStatus returns the current summary of checks as known by the cache.
-func (sr *StateReflector) CurrentStatus() health.State {
+// CurrentStatus returns the current summary of all checks requested as known by the cache.
+// Without a requested check, this will return the state of ALL found checks.
+func (sr *StateReflector) CurrentStatus(checkNames []string) health.State {
 	log.Infoln("khState reflector fetching current status")
 	state := health.NewState()
 
@@ -64,8 +65,16 @@ func (sr *StateReflector) CurrentStatus() health.State {
 		return state
 	}
 
-	// list all objects from the storage cache
-	khStateList := sr.store.List()
+	// list objects from the storage cache
+	var khStateList []interface{}
+	if len(checkNames) != 0 {
+		for _, check := range checkNames {
+			khState, _, _ := sr.store.GetByKey(check)
+			khStateList = append(khStateList, khState)
+		}
+	} else {
+		khStateList = sr.store.List()
+	}
 	for i, khStateUndefined := range khStateList {
 		log.Debugln("state reflector store item from listing:", i, khStateUndefined)
 		khState, ok := khStateUndefined.(*khstatev1.KuberhealthyState)
